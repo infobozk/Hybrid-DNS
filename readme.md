@@ -8,18 +8,19 @@ Working in a hybrid environment, where resources are located not only on-premise
 - Are there native capabilities we should be utilizing? 
 - How do we make sure our DNS Solution has no ambiguity when it comes to traffic flows?
 
-Understandably, all of this can feel quite daunting. The goal of this guideline is to understand the different scenarios that are available, knowing what each scenario offers and to help make an informed decision. Sadly, there is no 'best' or 'one-size-fits-all' solution. This goes for pretty much everything we deploy in the cloud and DNS Solutions are no exception. 
+Understandably, all of this can feel quite daunting. The goal of this guideline is outlining the common DNS solutions, understanding the benefits/disadvantages of each solution and to help make an informed decision. Sadly, there is no 'best' or 'one-size-fits-all' solution. This goes for pretty much everything we deploy in the cloud and DNS Solutions are no exception.
 
 ## Assessment
-Before discussing the different scenarios, it is important to assess the current solution and objectives for the new solution. The aim here is to have a good understanding of the situation and the desired outcome. 
+Before diving into the different solutions, it is important to assess the current DNS setup and objectives for the new solution. The goal is to have a good understanding of the situation and the desired outcome. 
 
-Due to being new to the cloud, needing to meet deadlines or other circumstances, many organizations proceed too quickly without a plan in place. This could potentially lead to a technical debt and need of fixing retro-actively.
+Whether it is being new to the cloud, needing to meet deadlines or other circumstances, many organizations proceed too quickly without a plan in place. This could potentially lead to a technical debt and need of fixing retro-actively.
 
 For example, if no IaaS platform is desired or even against internal/external compliancy rules, some of the solutions described will not be preferred. Conversely, if other requirements take precedence, you might be left with no alternative. Going back to the drawing board after deployment is not desired.
 
 ### What does our current DNS Solution look like? 
 ---
-Start with identifying the different workloads. E.g.: offices in different regions, remote users, applicationbased DNS, use of proxies, dependencies on DNS and how DNS-traffic flows under normal circumstances. Make sure to document these findings as it will help to find potential blindspots before having to deal with them. 
+Start with identifying the different workloads. E.g.: offices in different regions, remote users, applicationbased DNS, use of proxies, dependencies 
+and DNS-traffic flows. Make sure to document these findings as it will help to find potential blindspots before having to deal with them in retrospect.  
 
 ### Identify the technical and business requirements
 ---
@@ -107,7 +108,7 @@ A potential disadvantage of this scenario is the name resolution between on-prem
 - This setup is not common and offers very limited benefits compared to the other solutions, it should be viewed as a possible alternative if the other solutions do not meet the requirements and this does. 
 
 # Summary
-The solutions described are just some of the options available to us, but at the same time also the more commonly deployed scenarios. It is important to note that the cloud is ever-evolving, best-practices and recommendations change over time. Keep this in mind when using this or any other guideline. 
+The solutions described are just some of the options available to us, but at the same time also the more commonly used. It is important to note that the cloud is ever-evolving, best-practices and recommendations change over time. Keep this in mind when using this or any other guideline. 
 
 ## Resources
 [Azure Hybrid DNS Infra](https://learn.microsoft.com/en-us/azure/architecture/hybrid/hybrid-dns-infra)
