@@ -19,12 +19,12 @@ For example, if no IaaS platform is desired or even against internal/external co
 
 ### What does our current DNS Solution look like? 
 ---
-Start with identifying the different workloads. E.g.: offices in different regions, remote users, applicationbased DNS, use of proxies, dependencies 
-and DNS-traffic flows. Make sure to document these findings as it will help to find potential blindspots before having to deal with them in retrospect.  
+Start with identifying the different workloads. E.g.: offices in different regions, remote users, application-based DNS, use of proxies, dependencies 
+and DNS-traffic flows. Make sure to document these findings as it will help to find potential blind spots before having to deal with them in retrospect.  
 
 ### Identify the technical and business requirements
 ---
-What are the rules this new solution needs to be compliant with? Are there limitations on certain services? Are we targeting specific RTO/RPO/SLA's for this new solution? What other factors are in play? Good starting point is to refer to the Well-Architected Framework and analyze whether your new solution fit in with all of the WAF-pillars. This is a crucial step in the assessment, providing insight into the framework to which this solution needs to fit. 
+What are the rules this new solution needs to be compliant with? Are there limitations on certain services? Are we targeting specific RTO/RPO/SLAs for this new solution? What other factors are in play? Good starting point is to refer to the Well-Architected Framework and analyze whether your new solution fit in with all the WAF-pillars. This is a crucial step in the assessment, providing insight into the framework to which this solution needs to fit. 
 
 ### What challenges are we facing in our current DNS Solution and are there noteworthy aspects of this change to take into consideration? 
 ---
@@ -61,22 +61,22 @@ Disadvantages of this scenario:
 
 Note: there is no conditional forwarding rule configured. For name resolution for Azure resources such as PrivateLink endpoints you would be required to host those zones on your DNS-servers. 
 
-Additionally, some organisations opt to make the Azure hosted DNS VM's the primary DNS-servers. Local DNS-servers in branch locations and on-premises are configured as ReadOnly machines, transferring all zone information from the centralized DNS-servers. Benefit of this type of setup is a single-pane-of-glass type of DNS solution. Most administrative tasks relating to DNS would only be performed on the centralized servers.
+Additionally, some organizations opt to make the Azure hosted DNS VM's the primary DNS-servers. Local DNS-servers in branch locations and on-premises are configured as ReadOnly machines, transferring all zone information from the centralized DNS-servers. Benefit of this type of setup is a single-pane-of-glass type of DNS solution. Most administrative tasks relating to DNS would only be performed on the centralized servers.
 
 ## DNS Solution 2
 ![](https://github.com/infobozk/Hybrid-DNS/blob/6201c4e0e441fafa251eb17a31831fe981ae4e31/images/HybridDNS-2.png)
 ![](https://github.com/infobozk/Hybrid-DNS/blob/91532108477e49b2214e594e90ced4334f0e6f06/images/DNSFlow-2.png)
 An alternative to solution 1 is configuring the on-premises DNS-servers with conditional forwarding. In case the on-premises client requires name resolution for certain domains (e.g., privatelink), the on-premises DNS-server will forward these requests towards Azure.
 
-The same pros and cons apply to this solution, but there are also some notable difference:
+The same pros and cons apply to this solution, but there are also some notable differences:
 
 - Conditional forwarding rules must be setup and maintained 
-- A dependency is created by having this conditional forwarding. For name resolution to work, the connectivity between on-prem and Azure needs to be up and running. In most use-cases this should not be an issue, if the connection is down there is no traffic flow either way. So even if the name resolution did work, traffic would not reach the destination. However, in certain use-cases, this is not desired. Be aware of this when designing your infrastructure.
+- A dependency is created by having this conditional forwarding. For name resolution to work, the connectivity between on-prem and Azure needs to be up and running. In most use-cases this should not be an issue if the connection is down there is no traffic flow either way. So even if the name resolution did work, traffic would not reach the destination. However, in certain use-cases, this is not desired. Be aware of this when designing your infrastructure.
 
 ## DNS Scenario 3
 ![](https://github.com/infobozk/Hybrid-DNS/blob/e96a7e5d67d2869f0feef56c2752e90eef649b7e/images/HybridDNS-3.png)
 ![](https://github.com/infobozk/Hybrid-DNS/blob/91532108477e49b2214e594e90ced4334f0e6f06/images/DNSFlow-3.png)
-A different variation to this kind of setup is to replace the IaaS VM in Azure by the Azure Private DNS Resolver.
+A different variation to this kind of setup is to replace the IaaS VM in Azure by the Azure Private DNS Resolver. This managed solution required two dedicated subnets for the inbound and outbound endpoints. From the on-premises point of view, we would be forwarding DNS-queries to the private IP-addresses of the inbound endpoints. Traffic flow is very similar to Scenario 2. Key difference being that we no longer have DNS-servers running in Azure. 
 
 The official documentation mentions the following benefits:
 
@@ -97,15 +97,15 @@ There are some drawbacks to this setup:
 ![](https://github.com/infobozk/Hybrid-DNS/blob/17e6bddf2374d965d9380d1ea92370eeecbe31a9/images/HybridDNS-4.png)
 ![](https://github.com/infobozk/Hybrid-DNS/blob/91532108477e49b2214e594e90ced4334f0e6f06/images/DNSFlow-4.png)
 
-This setup also removes the need for having IaaS infrastructure in Azure and was mostly used by organisations under special circumstances (e.g. Azure Private DNS Resolver was not avail). Azure-hosted resources are able to perform DNS-queries using the DNS Private Zones and interal Azure DNS service. This also comes with the upside of having automatic registration/deregistration of resources inside of Azure (at time of writing limited to the primary IP on the NIC).
+This setup also removes the need for having IaaS infrastructure in Azure and was mostly used by organizations under special circumstances (e.g., Azure Private DNS Resolver was not avail). Azure-hosted resources can perform DNS-queries using the DNS Private Zones and internal Azure DNS service. This also comes with the upside of having automatic registration/deregistration of resources inside of Azure (at time of writing limited to the primary IP on the NIC).
 
-A potential disadvantage of this scenario is the name resolution between on-premise and Azure resources. Out of the box this will not be working. Two solutions for this problem:
+A potential disadvantage of this scenario is the name resolution between on-premises and Azure resources. Out of the box this will not be working. Two solutions for this problem:
 
-- Manually keeping the  DNS-environments in sync with the Azure Private Zone, anytime a resource is deployed/modified on-premise that particular change will need to be done on the DNS Private Zone. Similarly, when changes are made on the Azure side, this would need to be set on the local DNS servers.
+- Manually keeping the DNS-environments in sync with the Azure Private Zone, anytime a resource is deployed/modified on-premises that change will need to be done on the DNS Private Zone. Similarly, when changes are made on the Azure side, this would need to be set on the local DNS servers.
 
-- Having an automated method (like a script) to keep the DNS Private Zone and local DNS servers in sync, eliminating the need for manual labor.
+- Having an automated method (like a script) to keep the DNS Private Zone and local DNS servers in sync, eliminating the need for manual operations.
 
-- This setup is not common and offers very limited benefits compared to the other solutions, it should be viewed as a possible alternative if the other solutions do not meet the requirements and this does. 
+- This setup is not common and offers very limited benefits compared to the other solutions, it should be viewed as a possible alternative if the other solutions do not meet the requirements.
 
 # Summary
 The solutions described are just some of the options available to us, but at the same time also the more commonly used. It is important to note that the cloud is ever-evolving, best-practices and recommendations change over time. Keep this in mind when using this or any other guideline. 
